@@ -1,4 +1,4 @@
-module bitrixgo
+module github.com/Kuzm1ch-dev/BitrixGo
 
 go 1.20
 
