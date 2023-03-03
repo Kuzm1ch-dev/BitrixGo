@@ -48,3 +48,15 @@ func (c *Client) UpdateTask(taskid int, task types.Task) (*http.Response, error)
 	fmt.Printf("REQUEST:\n%s", string(reqDump))
 	return c.httpClient.Do(req)
 }
+
+func (c *Client) CheckTask(taskid int, task types.Task) (*http.Response, error) {
+	req, err := http.NewRequest("POST", c.Url.String()+"tasks.task.update.json?", nil)
+	if err != nil {
+		log.Println(err)
+	}
+	AddParamsFromStruct(req, task)
+	AddParam(req, "taskId", strconv.Itoa(taskid))
+	reqDump, err := httputil.DumpRequestOut(req, true)
+	fmt.Printf("REQUEST:\n%s", string(reqDump))
+	return c.httpClient.Do(req)
+}
