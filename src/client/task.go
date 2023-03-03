@@ -1,13 +1,14 @@
 package client
 
 import (
-	"bitrixgo/src/types"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"strconv"
+
+	"github.com/Kuzm1ch-dev/BitrixGo/src/types"
 )
 
 func (c *Client) AddTask(task types.Task) (*http.Response, error) {
