@@ -23,8 +23,8 @@ type WebhookAuthData struct {
 type Client struct {
 	webhookAuth  *WebhookAuthData
 	Url          *url.URL
-	httpClient   *http.Client
-	httpServer   *gin.Engine
+	HttpClient   *http.Client
+	HttpServer   *gin.Engine
 	OnTaskCreate func(*gin.Context)
 	OnTaskDelete func(*gin.Context)
 	OnTaskEdit   func(*gin.Context)
@@ -53,18 +53,21 @@ func NewClientWithWebhookAuth(intranetUrl string, userId int, secret string) (*C
 	return &Client{
 		Url:         u,
 		webhookAuth: auth,
-		httpClient:  httpClient,
-		httpServer:  gin.Default(),
+		HttpClient:  httpClient,
+		HttpServer:  gin.Default(),
 	}, nil
 }
 
 //
 
 func (c *Client) Run(host string, port string) {
-	c.httpServer.POST("/TaskCreate", c.OnTaskCreate)
-	c.httpServer.POST("/TaskDelete", c.OnTaskCreate)
-	c.httpServer.POST("/TaskEdit", c.OnTaskEdit)
-	c.httpServer.Run(fmt.Sprintf("%s:%s", host, port))
+	c.HttpServer.POST("/TaskCreate", c.OnTaskCreate)
+	c.HttpServer.GET("/TaskCreate", c.OnTaskCreate)
+	c.HttpServer.POST("/TaskDelete", c.OnTaskCreate)
+	c.HttpServer.GET("/TaskDelete", c.OnTaskCreate)
+	c.HttpServer.POST("/TaskEdit", c.OnTaskEdit)
+	c.HttpServer.GET("/TaskEdit", c.OnTaskEdit)
+	c.HttpServer.Run(fmt.Sprintf("%s:%s", host, port))
 }
 
 func (c *Client) AddTask(task Task) (*http.Response, error) {
@@ -75,7 +78,7 @@ func (c *Client) AddTask(task Task) (*http.Response, error) {
 	AddParamsFromStruct(req, task)
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	fmt.Printf("REQUEST:\n%s", string(reqDump))
-	return c.httpClient.Do(req)
+	return c.HttpClient.Do(req)
 }
 
 func (c *Client) GetTask(taskid int) (string, error) {
@@ -87,7 +90,7 @@ func (c *Client) GetTask(taskid int) (string, error) {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	fmt.Printf("REQUEST:\n%s", string(reqDump))
 
-	response, err := c.httpClient.Do(req)
+	response, err := c.HttpClient.Do(req)
 
 	answer, _ := ioutil.ReadAll(response.Body)
 	return string(answer), err
@@ -102,7 +105,7 @@ func (c *Client) UpdateTask(taskid int, task Task) (*http.Response, error) {
 	AddParam(req, "taskId", strconv.Itoa(taskid))
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	fmt.Printf("REQUEST:\n%s", string(reqDump))
-	return c.httpClient.Do(req)
+	return c.HttpClient.Do(req)
 }
 
 func (c *Client) CheckTask(taskid int, task Task) (*http.Response, error) {
@@ -114,5 +117,5 @@ func (c *Client) CheckTask(taskid int, task Task) (*http.Response, error) {
 	AddParam(req, "taskId", strconv.Itoa(taskid))
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	fmt.Printf("REQUEST:\n%s", string(reqDump))
-	return c.httpClient.Do(req)
+	return c.HttpClient.Do(req)
 }
