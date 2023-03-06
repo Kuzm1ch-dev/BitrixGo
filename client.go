@@ -63,10 +63,13 @@ func NewClientWithWebhookAuth(intranetUrl string, userId int, secret string) (*C
 func (c *Client) Run(host string, port string) {
 	c.HttpServer.POST("/TaskCreate", c.OnTaskCreate)
 	c.HttpServer.GET("/TaskCreate", c.OnTaskCreate)
+
 	c.HttpServer.POST("/TaskDelete", c.OnTaskCreate)
 	c.HttpServer.GET("/TaskDelete", c.OnTaskCreate)
+
 	c.HttpServer.POST("/TaskEdit", c.OnTaskEdit)
 	c.HttpServer.GET("/TaskEdit", c.OnTaskEdit)
+
 	c.HttpServer.Run(fmt.Sprintf("%s:%s", host, port))
 }
 
