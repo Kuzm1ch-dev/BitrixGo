@@ -64,7 +64,7 @@ func (c *Client) Run(host string, port string) {
 	c.httpServer.POST("/TaskCreate", c.OnTaskCreate)
 	c.httpServer.POST("/TaskDelete", c.OnTaskCreate)
 	c.httpServer.POST("/TaskEdit", c.OnTaskEdit)
-	c.httpServer.Run("192.168.3.150:8082")
+	c.httpServer.Run(fmt.Sprintf("%s:%s", host, port))
 }
 
 func (c *Client) AddTask(task Task) (*http.Response, error) {
