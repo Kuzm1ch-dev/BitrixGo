@@ -8,7 +8,7 @@ import (
 	"net/http/httputil"
 	"strconv"
 
-	"github.com/Kuzm1ch-dev/BitrixGo/src/types"
+	"github.com/Kuzm1ch-dev/BitrixGo/types"
 )
 
 func (c *Client) AddTask(task types.Task) (*http.Response, error) {
