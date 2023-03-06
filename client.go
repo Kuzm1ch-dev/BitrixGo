@@ -50,11 +50,11 @@ func NewClientWithWebhookAuth(intranetUrl string, userId int, secret string) (*C
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	httpClient := &http.Client{Transport: tr}
-
 	return &Client{
 		Url:         u,
 		webhookAuth: auth,
 		httpClient:  httpClient,
+		httpServer:  gin.Default(),
 	}, nil
 }
 
