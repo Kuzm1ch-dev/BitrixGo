@@ -92,7 +92,7 @@ func (c *Client) UpdateTask(taskid int, task Task) (*http.Response, error) {
 }
 
 func (c *Client) CheckTask(taskid int, task Task) (*http.Response, error) {
-	req, err := http.NewRequest("POST", c.Url.String()+"tasks.task.update.json?", nil)
+	req, err := http.NewRequest("POST", c.Url.String()+"tasks.task.get.json?", nil)
 	if err != nil {
 		log.Println(err)
 	}
