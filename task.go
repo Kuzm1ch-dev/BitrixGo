@@ -1,4 +1,4 @@
-package types
+package BitrixGo
 
 type Task struct {
 	Title          string `bitrix:"fields[TITLE]"`
