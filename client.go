@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
 
@@ -20,9 +21,13 @@ type WebhookAuthData struct {
 }
 
 type Client struct {
-	webhookAuth *WebhookAuthData
-	Url         *url.URL
-	httpClient  *http.Client
+	webhookAuth  *WebhookAuthData
+	Url          *url.URL
+	httpClient   *http.Client
+	httpServer   *gin.Engine
+	OnTaskCreate func(*gin.Context)
+	OnTaskDelete func(*gin.Context)
+	OnTaskEdit   func(*gin.Context)
 }
 
 func NewClientWithWebhookAuth(intranetUrl string, userId int, secret string) (*Client, error) {
@@ -51,6 +56,15 @@ func NewClientWithWebhookAuth(intranetUrl string, userId int, secret string) (*C
 		webhookAuth: auth,
 		httpClient:  httpClient,
 	}, nil
+}
+
+//
+
+func (c *Client) Run(host string, port string) {
+	c.httpServer.POST("/TaskCreate", c.OnTaskCreate)
+	c.httpServer.POST("/TaskDelete", c.OnTaskCreate)
+	c.httpServer.POST("/TaskEdit", c.OnTaskEdit)
+	c.httpServer.Run("192.168.3.150:8082")
 }
 
 func (c *Client) AddTask(task Task) (*http.Response, error) {
